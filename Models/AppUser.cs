@@ -21,4 +21,8 @@ public class AppUser : IdentityUser
     [NotMapped]
     [Display(Name = "Full Name")]
     public string? FullName { get { return $"{FirstName} {LastName}"; } }
+
+    // Navigation Properties
+    public virtual ICollection<Contact> Contacts { get; set; } = new HashSet<Contact>();
+    public virtual ICollection<Category> Categories { get; set; } = new HashSet<Category>();
 }

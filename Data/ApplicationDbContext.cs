@@ -9,4 +9,7 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
         : base(options)
     {
     }
+
+    public DbSet<Contact> Contacts { get; set; } = default!;
+    public DbSet<Category> Categories { get; set; } = default!;
 }
