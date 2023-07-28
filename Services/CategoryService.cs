@@ -19,13 +19,13 @@ public class CategoryService : ICategoryService
         try
         {
             if (userId is null) throw new ArgumentNullException(nameof(userId), "User ID cannot be null");
-            
+
             category.AppUserId = userId;
             await _context.Categories.AddAsync(category);
             var results = await _context.SaveChangesAsync();
             return results > 0;
         }
-        catch 
+        catch
         {
             throw;
         }
@@ -54,14 +54,14 @@ public class CategoryService : ICategoryService
         try
         {
             if (userId is null) throw new ArgumentNullException(nameof(userId), "User ID cannot be null");
-            
+
             var categories = await _context.Categories
                 .Where(c => c.AppUserId == userId)
                 .ToListAsync();
 
             return categories;
         }
-        catch 
+        catch
         {
             throw;
         }
@@ -75,7 +75,7 @@ public class CategoryService : ICategoryService
             var results = await _context.SaveChangesAsync();
             return results > 0;
         }
-        catch 
+        catch
         {
             throw;
         }
@@ -86,9 +86,9 @@ public class CategoryService : ICategoryService
         try
         {
             var category = await _context.Categories.FindAsync(categoryId);
-            
+
             if (category is null) throw new KeyNotFoundException("Category not found");
-            
+
             _context.Categories.Remove(category);
             var results = await _context.SaveChangesAsync();
             return results > 0;
@@ -98,12 +98,12 @@ public class CategoryService : ICategoryService
             throw;
         }
     }
-    
+
     public async Task<bool> AddContactToCategoriesAsync(Contact contact, List<Guid> categoryIds)
     {
         try
         {
-            foreach (var categoryId in categoryIds) 
+            foreach (var categoryId in categoryIds)
             {
                 var category = await GetCategoryByIdAsync(categoryId);
                 category.Contacts.Add(contact);
@@ -127,7 +127,7 @@ public class CategoryService : ICategoryService
             var results = await _context.SaveChangesAsync();
             return results > 0;
         }
-        catch 
+        catch
         {
             throw;
         }

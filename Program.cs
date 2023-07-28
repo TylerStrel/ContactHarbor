@@ -18,7 +18,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-
+builder.Services.AddScoped<IContactService, ContactService>();
 
 var app = builder.Build();
 

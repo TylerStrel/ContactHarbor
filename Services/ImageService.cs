@@ -5,7 +5,7 @@ namespace ContactHarbor.Services;
 public class ImageService : IImageService
 {
     private readonly string defaultImage = "/img/DefaultContactImage.png";
-    
+
     public string ConvertByteArrayToFile(byte[] fileData, string fileExtension)
     {
         if (fileData is null) return defaultImage;
