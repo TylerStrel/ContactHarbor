@@ -66,10 +66,12 @@ public class ContactsController : Controller
                     await _categoryService.AddContactToCategoriesAsync(contact, categories);
                 }
 
+                TempData["SuccessMessage"] = "Contact created successfully.";
                 return RedirectToAction(nameof(Index));
             }
         }
 
+        TempData["ErrorMessage"] = "Unable to create contact, please try again.";
         await CreateViewDataSelectLists();
         return View(contact);
     }
@@ -114,10 +116,12 @@ public class ContactsController : Controller
                     await _categoryService.AddContactToCategoriesAsync(contact, categories);
                 }
 
+                TempData["SuccessMessage"] = "Contact updated successfully.";
                 return RedirectToAction(nameof(Index));
             }
         }
 
+        TempData["ErrorMessage"] = "Unable to update contact, please try again.";
         await CreateViewDataSelectLists(contact);
         return View(contact);
     }
@@ -143,9 +147,11 @@ public class ContactsController : Controller
 
         if (results)
         {
+            TempData["SuccessMessage"] = "Contact deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
+        TempData["ErrorMessage"] = "Unable to delete contact, please try again.";
         return View(await _contactService.GetContactByIdAsync(id));
     }
 

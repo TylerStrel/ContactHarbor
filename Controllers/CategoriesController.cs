@@ -57,10 +57,12 @@ public class CategoriesController : Controller
 
             if (results)
             {
+                TempData["SuccessMessage"] = "Category created successfully.";
                 return RedirectToAction(nameof(Index));
             }
         }
 
+        TempData["ErrorMessage"] = "Unable to create category, please try again.";
         return View(category);
     }
 
@@ -93,10 +95,12 @@ public class CategoriesController : Controller
 
             if (results)
             {
+                TempData["SuccessMessage"] = "Category updated successfully.";
                 return RedirectToAction(nameof(Index));
             }
         }
 
+        TempData["ErrorMessage"] = "Unable to update category, please try again.";
         return View(category);
     }
 
@@ -121,9 +125,11 @@ public class CategoriesController : Controller
 
         if (results)
         {
+            TempData["SuccessMessage"] = "Category deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
+        TempData["ErrorMessage"] = "Unable to delete category, please try again.";
         return View(await _categoryService.GetCategoryByIdAsync(id));
     }
 }
