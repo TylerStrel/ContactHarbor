@@ -8,10 +8,13 @@ namespace ContactHarbor.Services;
 public class CategoryService : ICategoryService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IContactService _contactService;
 
-    public CategoryService(ApplicationDbContext context)
+    public CategoryService(ApplicationDbContext context, IContactService contactService)
     {
         _context = context;
+        _contactService = contactService;
+
     }
 
     public async Task<bool> CreateCategoryAsync(Category category, string userId)
@@ -122,8 +125,10 @@ public class CategoryService : ICategoryService
     {
         try
         {
-            contact.Categories.Clear();
-            _context.Update(contact);
+            var _contact = await _contactService.GetContactByIdAsync(contact.Id);
+
+            _contact.Categories.Clear();
+            _context.Update(_contact);
             var results = await _context.SaveChangesAsync();
             return results > 0;
         }
