@@ -27,6 +27,8 @@ public class EmailService : IEmailSender
 
         var emailAddress = senderEmail;
         var message = new MimeMessage();
+        message.Headers.Add("trackopens", "false");
+        message.Headers.Add("trackclicks", "false");
         message.From.Add(MailboxAddress.Parse(emailAddress));
         message.To.Add(MailboxAddress.Parse(email));
         message.Subject = subject;
