@@ -1,4 +1,5 @@
-﻿using MailKit.Net.Smtp;
+﻿using ContactHarbor.Models;
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using MimeKit;
@@ -9,15 +10,23 @@ namespace ContactHarbor.Services;
 public class EmailService : IEmailSender
 {
     private readonly IConfiguration _configuration;
+    private readonly MailSettings _mailSettings;
 
-    public EmailService(IConfiguration configuration)
+    public EmailService(IConfiguration configuration, MailSettings mailSettings)
     {
         _configuration = configuration;
+        _mailSettings = mailSettings;
     }
 
     public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
-        var emailAddress = _configuration["ElasticEmail:SmtpUsername"];
+        var senderEmail = _mailSettings.SmtpUsername ?? Environment.GetEnvironmentVariable("SmtpUsername");
+        var host = _mailSettings.SmtpServer ?? Environment.GetEnvironmentVariable("SmtpServer");
+        var port = _mailSettings.SmtpPort != 0 ? _mailSettings.SmtpPort : int.Parse(Environment.GetEnvironmentVariable("SmtpPort")!);
+        var key = _mailSettings.SmtpApiKey ?? Environment.GetEnvironmentVariable("SmtpApiKey");
+
+
+        var emailAddress = senderEmail;
         var message = new MimeMessage();
         message.From.Add(MailboxAddress.Parse(emailAddress));
         message.To.Add(MailboxAddress.Parse(email));
@@ -25,8 +34,8 @@ public class EmailService : IEmailSender
         message.Body = new TextPart("html") { Text = htmlMessage };
 
         using var client = new SmtpClient();
-        await client.ConnectAsync(_configuration["ElasticEmail:SmtpServer"], int.Parse(_configuration["ElasticEmail:SmtpPort"]!), SecureSocketOptions.StartTls);
-        await client.AuthenticateAsync(emailAddress, _configuration["ElasticEmail:SmtpApiKey"]);
+        await client.ConnectAsync(host, port, SecureSocketOptions.StartTls);
+        await client.AuthenticateAsync(emailAddress, key);
         await client.SendAsync(message);
         await client.DisconnectAsync(true);
     }
