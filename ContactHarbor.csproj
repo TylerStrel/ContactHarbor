@@ -7,6 +7,7 @@
     <UserSecretsId>aspnet-ContactHarbor-057ffe32-fecf-40e7-8d11-71d6e92a7f44</UserSecretsId>
 	  <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	  <InvariantGlobalization>true</InvariantGlobalization>
+	  <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +20,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.8" />
     <PackageReference Include="MimeKit" Version="4.1.0" />
     <PackageReference Include="Npgsql" Version="7.0.4" />
