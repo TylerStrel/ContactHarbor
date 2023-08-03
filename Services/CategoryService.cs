@@ -40,6 +40,7 @@ public class CategoryService : ICategoryService
         {
             var category = await _context.Categories
                 .Where(c => c.Id == categoryId)
+                .Include(c => c.Contacts)
                 .SingleOrDefaultAsync();
 
             if (category is null) throw new KeyNotFoundException("Category not found");

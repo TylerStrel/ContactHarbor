@@ -94,6 +94,12 @@ public class SetPasswordModel : PageModel
             return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
         }
 
+        if (user.Email == "demo@contactharbor.com")
+        {
+            // Don't allow password change
+            return Forbid();
+        }
+
         var addPasswordResult = await _userManager.AddPasswordAsync(user, Input.NewPassword);
         if (!addPasswordResult.Succeeded)
         {

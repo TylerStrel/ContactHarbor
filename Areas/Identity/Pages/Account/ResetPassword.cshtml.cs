@@ -15,10 +15,12 @@ namespace ContactHarbor.Areas.Identity.Pages.Account;
 public class ResetPasswordModel : PageModel
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly SignInManager<AppUser> _signInManager;
 
-    public ResetPasswordModel(UserManager<AppUser> userManager)
+    public ResetPasswordModel(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
     {
         _userManager = userManager;
+        _signInManager = signInManager;
     }
 
     /// <summary>
@@ -71,6 +73,11 @@ public class ResetPasswordModel : PageModel
 
     public IActionResult OnGet(string code = null)
     {
+        if (_signInManager.IsSignedIn(User))
+        {
+            return LocalRedirect("~/Index");
+        }
+
         if (code == null)
         {
             return BadRequest("A code must be supplied for password reset.");

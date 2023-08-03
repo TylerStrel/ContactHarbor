@@ -1,8 +1,62 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <h1 class="display-4">Contact Harbor</h1>
+            <p class="lead">Your ultimate contact management solution. Stay organized and keep track of your contacts effortlessly.</p>
+            @if (!SignInManager.IsSignedIn(User))
+            {
+                <a href="Identity/Account/Login" class="btn btn-app-primary btn-lg my-3">Login</a>
+                <a href="Identity/Account/DemoLogin" class="btn btn-app-primary btn-lg my-3">Try Demo</a>
+            }
+            <hr class="my-4">
+            <p>Features:</p>
+            <ul>
+                <li><h4>Easy Management</h4><p>Manage all your contacts easily. Add, edit, and delete contacts with a few clicks.</p></li>
+                <li><h4>Powerful Search</h4><p>Find your contacts in an instant with our powerful search feature. No more sifting through endless lists manually.</p></li>
+                <li><h4>Customizable Categories</h4><p>Group your contacts into categories that suit your needs. Customize and organize your contacts for optimized interaction and accessibility.</p></li>
+            </ul>
+            <div class="row mt-5">
+                <div class="col text-center">
+                    <h3>Built With</h3>
+                    <hr>
+                    <div class="d-flex justify-content-center flex-wrap">
+                        <figure class="icon-container">
+                            <i class="devicon-csharp-plain colored"></i>
+                            <figcaption>C#</figcaption>
+                        </figure>
+                        <figure class="icon-container">
+                            <i class="devicon-dot-net-plain colored"></i>
+                            <figcaption>.NET Core</figcaption>
+                        </figure>
+                        <figure class="icon-container">
+                            <i class="devicon-postgresql-plain colored"></i>
+                            <figcaption>Postgres</figcaption>
+                        </figure>
+                        <figure class="icon-container">
+                            <i class="devicon-bootstrap-plain colored"></i>
+                            <figcaption>Bootstrap</figcaption>
+                        </figure>
+                        <figure class="icon-container">
+                            <i class="devicon-html5-plain colored"></i>
+                            <figcaption>HTML5</figcaption>
+                        </figure>
+                        <figure class="icon-container">
+                            <i class="devicon-css3-plain colored"></i>
+                            <figcaption>CSS3</figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 text-center">
+            <img src="~/img/ContactHarbor_Logo_Large.svg" alt="Logo" class="img-fluid" style="height:300%; width:300%;">
+        </div>
+    </div>
 </div>

@@ -14,10 +14,12 @@ namespace ContactHarbor.Areas.Identity.Pages.Account;
 public class ConfirmEmailModel : PageModel
 {
     private readonly UserManager<AppUser> _userManager;
+    private readonly SignInManager<AppUser> _signInManager;
 
-    public ConfirmEmailModel(UserManager<AppUser> userManager)
+    public ConfirmEmailModel(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
     {
         _userManager = userManager;
+        _signInManager = signInManager;
     }
 
     /// <summary>
@@ -28,6 +30,11 @@ public class ConfirmEmailModel : PageModel
     public string StatusMessage { get; set; }
     public async Task<IActionResult> OnGetAsync(string userId, string code)
     {
+        if (_signInManager.IsSignedIn(User))
+        {
+            return LocalRedirect("~/Index");
+        }
+
         if (userId == null || code == null)
         {
             return RedirectToPage("/Index");

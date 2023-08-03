@@ -18,11 +18,13 @@ public class ForgotPasswordModel : PageModel
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IEmailSender _emailSender;
+    private readonly SignInManager<AppUser> _signInManager;
 
-    public ForgotPasswordModel(UserManager<AppUser> userManager, IEmailSender emailSender)
+    public ForgotPasswordModel(UserManager<AppUser> userManager, IEmailSender emailSender, SignInManager<AppUser> signInManager)
     {
         _userManager = userManager;
         _emailSender = emailSender;
+        _signInManager = signInManager;
     }
 
     /// <summary>
@@ -47,11 +49,28 @@ public class ForgotPasswordModel : PageModel
         public string Email { get; set; }
     }
 
+    public IActionResult OnGet()
+    {
+        if (_signInManager.IsSignedIn(User))
+        {
+            return LocalRedirect("~/Index");
+        }
+
+        return Page();
+    }
+
     public async Task<IActionResult> OnPostAsync()
     {
         if (ModelState.IsValid)
         {
             var user = await _userManager.FindByEmailAsync(Input.Email);
+
+            if (user.Email == "demo@contactharbor.com")
+            {
+                // Don't allow password reset
+                return Forbid();
+            }
+
             if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
             {
                 // Don't reveal that the user does not exist or is not confirmed

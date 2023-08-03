@@ -36,6 +36,12 @@ public class DownloadPersonalDataModel : PageModel
             return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
         }
 
+        if (user.Email == "demo@contactharbor.com")
+        {
+            // Don't allow download personal data
+            return Forbid();
+        }
+
         _logger.LogInformation("User with ID '{UserId}' asked for their personal data.", _userManager.GetUserId(User));
 
         // Only include personal data for download

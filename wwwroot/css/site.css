@@ -1,22 +1,132 @@
+:root {
+    --primary-color: #01cdcd;
+    --secondary-color: #10261f;
+    --darker-primary-color: #019999;
+}
+
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: 'Baloo Bhaijaan 2', cursive;
+    background-color: #efecec;
+    margin-bottom: 60px;
+}
+
+/* Buttons */
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.btn-app-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+    .btn-app-primary:hover {
+        background-color: var(--darker-primary-color);
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+/* Navbar */
+
+.navbar {
+    background-color: #efecec;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: var(--primary-color);
+}
+
+/* Cards */
+
+.card {
+    background-color: #efecec;
+    display: flex;
+    grid-template-rows: auto 1fr;
+}
+
+    .card img {
+        height: 500px;
+        object-fit: cover;
+    }
+
+/* Icon Container */
+
+.icon-container {
+    width: 75px;
+    text-align: center;
+}
+
+    .icon-container i {
+        font-size: 3rem;
+    }
+
+/* Search Filter Box */
+
+.search-filter-box {
+    background-color: rgba(16, 38, 31, 0.1);
+    width: fit-content;
+    padding: 15px;
+    border: 1px solid;
+}
+
+/* Contact Action Icon */
+
+.contact-action-icon {
+    fill: var(--secondary-color) !important;
+    transition: fill 0.3s ease;
+}
+
+    .contact-action-icon:hover {
+        fill: var(--primary-color) !important;
+    }
+
+.contact-action-icon-delete {
+    fill: darkred !important;
+    transition: fill 0.3s ease;
+}
+
+    .contact-action-icon-delete:hover {
+        fill: red !important;
+    }
+
+/* Image Container */
+
+.image-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    overflow: hidden;
+}
+
+    .image-container img {
+        position: absolute;
+        object-fit: scale-down;
+        width: 100%;
+        height: 100%;
+    }
+
+.image-fixed-size {
+    object-fit: cover;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Background */
+
+.bg-app-primary {
+    background-color: var(--primary-color)
 }

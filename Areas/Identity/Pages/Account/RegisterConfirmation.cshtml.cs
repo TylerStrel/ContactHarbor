@@ -18,11 +18,13 @@ public class RegisterConfirmationModel : PageModel
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IEmailSender _sender;
+    private readonly SignInManager<AppUser> _signInManager;
 
-    public RegisterConfirmationModel(UserManager<AppUser> userManager, IEmailSender sender)
+    public RegisterConfirmationModel(UserManager<AppUser> userManager, IEmailSender sender, SignInManager<AppUser> signInManager)
     {
         _userManager = userManager;
         _sender = sender;
+        _signInManager = signInManager;
     }
 
     /// <summary>
@@ -45,6 +47,11 @@ public class RegisterConfirmationModel : PageModel
 
     public async Task<IActionResult> OnGetAsync(string email, string returnUrl = null)
     {
+        if (_signInManager.IsSignedIn(User))
+        {
+            return LocalRedirect("~/Index");
+        }
+
         if (email == null)
         {
             return RedirectToPage("/Index");
@@ -59,7 +66,7 @@ public class RegisterConfirmationModel : PageModel
 
         Email = email;
         // Once you add a real email sender, you should remove this code that lets you confirm the account
-        DisplayConfirmAccountLink = true;
+        DisplayConfirmAccountLink = false;
         if (DisplayConfirmAccountLink)
         {
             var userId = await _userManager.GetUserIdAsync(user);

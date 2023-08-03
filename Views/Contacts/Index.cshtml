@@ -1,107 +1,83 @@
 ﻿@model IEnumerable<ContactHarbor.Models.Contact>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "My Contacts";
 }
 
-<h1>Index</h1>
+<div class="container">
+    <div class="row">
+        <h1 class="mb-4">My Contacts</h1>
+    </div>
+    <div class="d-flex justify-content-end mb-1">
+        <a asp-action="Create" class="btn btn-app-primary">Create New</a>
+    </div>
+    <div class="row flex-column-reverse flex-lg-row">
+        <div class="col-12 col-lg-3 mt-3 mt-lg-0">
+            <div class="search-filter-box">
+                <!-- Search and Filter Section -->
+                <h2>Search Contacts</h2>
+                <form asp-action="Index">
+                    <div class="input-group my-3">
+                        <input type="text" class="form-control" id="search-input" placeholder="Search for contacts..." name="searchString">
+                        <div class="input-group-append">
+                            <button class="btn btn-app-primary" type="submit" id="search-button">Search</button>
+                        </div>
+                    </div>
+                    <div class="input-group my-3">
+                        <select id="category-filter" name="categoryId" asp-items="@(ViewData["CategoryList"] as SelectList)" class="form-control">
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-danger my-2 my-sm-0" id="clear-button">Clear Search</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-12 col-lg-9">
+            <!-- Contacts List Section -->
+            <div id="contactTable">
+                <partial name="_ContactTable" model="Model" />
+            </div>
+        </div>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Image)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.State)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ZipCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categories)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @if (item.ImageData is not null)
-                {
-                    <img id='imageFileData' class="img-fluid img-thumbnail" style="width:100px;height:80px;" src="data:image/*;base64,@(Convert.ToBase64String(item.ImageData))">
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#search-button").click(function (e) {
+                e.preventDefault();
+                var searchString = $("#search-input").val();
+
+                // If searchString is not empty, then send the request.
+                if (searchString.trim() !== "") {
+                    e.preventDefault();
+                    $("#contactTable").load("/Contacts/Search?searchString=" + searchString);
                 }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfBirth)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ZipCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                @foreach (var category in item.Categories)
-                {
-                    <span>@category.Name</span>
+                // If searchString is empty, do nothing (or show a message/alert if you want).
+                else {
+                    e.preventDefault();
                 }
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+            });
+
+            // Add event listener for category filter
+            $("#category-filter").change(function () {
+                var categoryId = $(this).val();
+
+                // If categoryId is not empty, then send the request.
+                if (categoryId !== "") {
+                    $("#contactTable").load("/Contacts/FilterByCategory?categoryId=" + categoryId);
+                }
+                // If categoryId is empty, reload the contact list (or filter by another parameter if needed).
+                else {
+                    location.reload();
+                }
+            });
+
+            // Clear Search button behavior
+            $("#clear-button").click(function (e) {
+                e.preventDefault();
+                location.reload();
+            });
+        });
+    </script>
 }
-    </tbody>
-</table>

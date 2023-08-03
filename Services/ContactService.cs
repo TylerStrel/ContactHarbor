@@ -84,11 +84,15 @@ public class ContactService : IContactService
         }
     }
 
-    public async Task<bool> UpdateContactAsync(Contact contact)
+    public async Task<bool> UpdateContactAsync(Contact contact, bool clearImage)
     {
         try
         {
-            if (contact.Image is not null)
+            if (clearImage)
+            {
+                await SetDefaultContactImage(contact);
+            }
+            else if (contact.Image is not null)
             {
                 contact.ImageData = await _imageService.ConvertFileToByteArrayAsync(contact.Image);
                 contact.ImageName = contact.Image.Name;
@@ -99,10 +103,6 @@ public class ContactService : IContactService
                 contact.ImageData = contact.ImageData;
                 contact.ImageName = contact.ImageName;
                 contact.ImageType = contact.ImageType;
-            }
-            else
-            {
-                await SetDefaultContactImage(contact);
             }
 
             contact.DateOfBirth = contact.DateOfBirth.UtcDateTime;
@@ -133,6 +133,54 @@ public class ContactService : IContactService
             throw;
         }
     }
+
+    public async Task<IEnumerable<Contact>> SearchContactsAsync(string searchString, string userId)
+    {
+        try
+        {
+            searchString = searchString.ToLower();
+            var contacts = await _context.Contacts
+                .Where(c => c.AppUserId == userId &&
+                            (c.FirstName!.ToLower().Contains(searchString) ||
+                             c.LastName!.ToLower().Contains(searchString) ||
+                             c.Email!.ToLower().Contains(searchString) ||
+                             c.Address1!.ToLower().Contains(searchString) ||
+                             c.Address2!.ToLower().Contains(searchString) ||
+                             c.City!.ToLower().Contains(searchString) ||
+                             c.State!.ToLower().Contains(searchString) ||
+                             c.ZipCode!.ToLower().Contains(searchString) ||
+                             c.Categories.Any(cat => cat.Name!.ToLower().Contains(searchString)) ||
+                             (c.PhoneNumber != null && c.PhoneNumber.ToLower().Contains(searchString))))
+                .Include(c => c.Categories)
+                .ToListAsync();
+
+            return contacts;
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<Contact>> GetAllContactsInCategoryAsync(Guid categoryId, string userId)
+    {
+        try
+        {
+            if (userId is null) throw new ArgumentNullException(nameof(userId), "User ID cannot be null");
+
+            var contacts = await _context.Contacts.Where(c => c.AppUserId == userId)
+                .Include(c => c.Categories)
+                .Where(c => c.Categories.Any(cat => cat.Id == categoryId))
+                .ToListAsync();
+
+            return contacts;
+        }
+        catch
+        {
+            throw;
+        }
+    }
+
 
     private async Task SetDefaultContactImage(Contact contact)
     {

@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ContactHarbor.Models.Contact>
+
+@if (Model.Any())
+{
+    @foreach (var item in Model)
+    {
+        <div class="card mb-3 shadow">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    @if (item.ImageData is not null)
+                    {
+
+                            <img id='imageFileData' class="img-fluid img-thumbnail card-img" src="data:image/*;base64,@(Convert.ToBase64String(item.ImageData))">
+
+                    }
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h3 class="card-title">@item.FullName</h3>
+                        <p class="card-text"><strong>Birthday:</strong> @Html.DisplayFor(modelItem => item.DateOfBirth) </p>
+
+                        @if (!string.IsNullOrWhiteSpace(item.Address1) || !string.IsNullOrWhiteSpace(item.Address2) ||
+                       !string.IsNullOrWhiteSpace(item.City) || !string.IsNullOrWhiteSpace(item.State) || !string.IsNullOrWhiteSpace(item.ZipCode))
+                       {
+                            <p class="card-text">
+                                <strong>Address:</strong><br />
+
+                                @if (!string.IsNullOrWhiteSpace(item.Address1)) { @Html.DisplayFor(modelItem => item.Address1) <br /> }
+                                @if (!string.IsNullOrWhiteSpace(item.Address2)) { @Html.DisplayFor(modelItem => item.Address2) <br /> }
+                                @if (!string.IsNullOrWhiteSpace(item.City) && !string.IsNullOrWhiteSpace(item.State))
+                                { 
+                                    @Html.DisplayFor(modelItem => item.City)
+                                    <text>, </text>
+                                    @Html.DisplayFor(modelItem => item.State)
+                                }
+                                else
+                                {
+                                    @if (!string.IsNullOrWhiteSpace(item.City)) { @Html.DisplayFor(modelItem => item.City) }
+                                    @if (!string.IsNullOrWhiteSpace(item.State)) { @Html.DisplayFor(modelItem => item.State) }
+                                }
+                                
+                                @if (!string.IsNullOrWhiteSpace(item.ZipCode)) { @Html.DisplayFor(modelItem => item.ZipCode) }
+                            </p>
+                       }
+                     
+                        <p class="card-text">
+                            <strong>Email:</strong> @Html.DisplayFor(modelItem => item.Email)<br />
+                            @if (!string.IsNullOrWhiteSpace(item.PhoneNumber)) { <strong>Phone Number:</strong> @Html.DisplayFor(modelItem => item.PhoneNumber) }
+                        </p>
+                        <p class="card-text">
+                            @foreach (var category in item.Categories)
+                            {
+                                <span class="badge bg-app-primary mr-2">@category.Name</span>
+                            }
+                        </p>
+                        <div class="card-actions">
+                            <a asp-action="Email" asp-route-id="@item.Id" title="Email Contact"><i data-icon="ei-envelope" data-size="m" class="contact-action-icon"></i></a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" title="Edit Contact"><i data-icon="ei-pencil" data-size="m" class="contact-action-icon"></i></a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" title="Delete Contact"><i data-icon="ei-trash" data-size="m" class="contact-action-icon-delete"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p>No contacts found.</p>
+}

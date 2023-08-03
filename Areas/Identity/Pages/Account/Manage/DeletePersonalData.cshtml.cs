@@ -74,6 +74,12 @@ public class DeletePersonalDataModel : PageModel
             return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
         }
 
+        if (user.Email == "demo@contactharbor.com")
+        {
+            // Don't allow delete personal data
+            return Forbid();
+        }
+
         RequirePassword = await _userManager.HasPasswordAsync(user);
         if (RequirePassword)
         {

@@ -1,21 +1,26 @@
 ﻿using ContactHarbor.Models;
 using ContactHarbor.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ContactHarbor.Controllers;
 
+[Authorize]
 public class ContactsController : Controller
 {
     private readonly IContactService _contactService;
     private readonly ICategoryService _categoryService;
+    private readonly IEmailSender _emailService;
     private readonly UserManager<AppUser> _userManager;
 
-    public ContactsController(IContactService contactService, ICategoryService categoryService, UserManager<AppUser> userManager)
+    public ContactsController(IContactService contactService, ICategoryService categoryService, IEmailSender emailService, UserManager<AppUser> userManager)
     {
         _contactService = contactService;
         _categoryService = categoryService;
+        _emailService = emailService;
         _userManager = userManager;
     }
 
@@ -24,19 +29,11 @@ public class ContactsController : Controller
     {
         var contacts = await _contactService.GetAllContactsAsync(_userManager.GetUserId(User)!);
 
+        var categories = await _categoryService.GetAllCategoriesForUserAsync(_userManager.GetUserId(User)!);
+        ViewData["CategoryList"] = new SelectList(categories, "Id", "Name");
+
+
         return View(contacts);
-    }
-
-    // GET: Contacts/Details/5
-    public async Task<IActionResult> Details(Guid? id)
-    {
-        if (id is null) return NotFound();
-
-        var contact = await _contactService.GetContactByIdAsync(id.Value);
-
-        if (contact is null) return NotFound();
-
-        return View(contact);
     }
 
     // GET: Contacts/Create
@@ -94,7 +91,7 @@ public class ContactsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Guid id, [Bind("Id,AppUserId,FirstName,LastName,DateOfBirth,Address1,Address2,City,State,ZipCode,Email,PhoneNumber,Image,ImageName,ImageData,ImageType,Created")] Contact contact, List<Guid> categories)
+    public async Task<IActionResult> Edit(Guid id, [Bind("Id,AppUserId,FirstName,LastName,DateOfBirth,Address1,Address2,City,State,ZipCode,Email,PhoneNumber,Image,ImageName,ImageData,ImageType,Created")] Contact contact, List<Guid> categories, bool clearImageFlag)
     {
         if (id != contact.Id) return NotFound();
 
@@ -102,7 +99,7 @@ public class ContactsController : Controller
 
         if (ModelState.IsValid)
         {
-            var results = await _contactService.UpdateContactAsync(contact);
+            var results = await _contactService.UpdateContactAsync(contact, clearImageFlag);
 
             if (results)
             {
@@ -153,6 +150,51 @@ public class ContactsController : Controller
 
         TempData["ErrorMessage"] = "Unable to delete contact, please try again.";
         return View(await _contactService.GetContactByIdAsync(id));
+    }
+
+    [HttpGet]
+    public async Task <IActionResult> Email(Guid id)
+    {
+        var contact = await _contactService.GetContactByIdAsync(id);
+
+        if (contact is null) return NotFound();
+
+        var viewModel = new EmailContactViewModel
+        {
+            Contact = contact
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Email(Guid id, EmailContactViewModel model)
+    {
+        await _emailService.SendEmailAsync(model.Contact!.Email!, model.Subject!, model.Message!);
+
+        TempData["SuccessMessage"] = "Email sent successfully.";
+        return RedirectToAction(nameof(Index));
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> Search(string searchString)
+    {
+        var resluts = await _contactService.SearchContactsAsync(searchString, _userManager.GetUserId(User)!);
+
+        if (!resluts.Any())
+        {
+            resluts = new List<Contact>();
+        }
+
+        return PartialView("_ContactTable", resluts);
+    }
+
+    public async Task<IActionResult> FilterByCategory(Guid categoryId)
+    {
+        var resluts = await _contactService.GetAllContactsInCategoryAsync(categoryId, _userManager.GetUserId(User)!);
+        return PartialView("_ContactTable", resluts);
     }
 
     private async Task CreateViewDataSelectLists(Contact? contact = null)

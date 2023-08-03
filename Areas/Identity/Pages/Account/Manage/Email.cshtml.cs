@@ -105,6 +105,13 @@ public class EmailModel : PageModel
             return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
         }
 
+        if (user.Email == "demo@contactharbor.com")
+        {
+            // Don't allow email change
+            return Forbid();
+        }
+
+
         if (!ModelState.IsValid)
         {
             await LoadAsync(user);

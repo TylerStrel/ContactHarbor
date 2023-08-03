@@ -20,11 +20,13 @@ public class ResendEmailConfirmationModel : PageModel
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IEmailSender _emailSender;
+    private readonly SignInManager<AppUser> _signInManager;
 
-    public ResendEmailConfirmationModel(UserManager<AppUser> userManager, IEmailSender emailSender)
+    public ResendEmailConfirmationModel(UserManager<AppUser> userManager, IEmailSender emailSender, SignInManager<AppUser> signInManager)
     {
         _userManager = userManager;
         _emailSender = emailSender;
+        _signInManager = signInManager;
     }
 
     /// <summary>
@@ -49,8 +51,14 @@ public class ResendEmailConfirmationModel : PageModel
         public string Email { get; set; }
     }
 
-    public void OnGet()
+    public IActionResult OnGet()
     {
+        if (_signInManager.IsSignedIn(User))
+        {
+            return LocalRedirect("~/Index");
+        }
+
+        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
