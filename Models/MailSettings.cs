@@ -2,12 +2,12 @@
 
 public class MailSettings
 {
-    public string? EmailAddress { get; set; }
+    public string? SmtpUsername { get; set; }
 
-    public string? EmailPassword { get; set; }
+    public string? SmtpApiKey { get; set; }
 
-    public string? EmailHost { get; set; }
+    public string? SmtpServer { get; set; }
 
-    public int EmailPort { get; set; }
+    public int SmtpPort { get; set; }
 }
 
