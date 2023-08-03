@@ -13,7 +13,7 @@ public static class DataUtility
         string? databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
         return string.IsNullOrEmpty(databaseUrl) ? connectionString! : BuildConnectionString(databaseUrl);
     }
-    
+
     private static string BuildConnectionString(string databaseUrl)
     {
         var databaseUri = new Uri(databaseUrl);
@@ -30,8 +30,8 @@ public static class DataUtility
         };
         return builder.ToString();
     }
-    
-    
+
+
     public static async Task ManageDataAsync(IServiceProvider serviceProvider, IConfiguration configuration)
     {
         var dbContextService = serviceProvider.GetRequiredService<ApplicationDbContext>();
@@ -43,7 +43,7 @@ public static class DataUtility
         await SeedDemoUserAsync(userManagerService, configuration);
         await SeedDemoUserDataAsync(dbContextService, userManagerService, webHostEnvironment);
     }
-    
+
     private static async Task SeedDemoUserAsync(UserManager<AppUser> userManager, IConfiguration configuration)
     {
         AppUser demoUser = new AppUser()
@@ -74,7 +74,7 @@ public static class DataUtility
 
         if (demoUser is not null && !await dbContext.Categories.AnyAsync(c => c.AppUserId == demoUser.Id) && !await dbContext.Contacts.AnyAsync(c => c.AppUserId == demoUser.Id))
         {
-        
+
             var categories = new List<Category>
             {
                 new Category { Id = Guid.NewGuid(), Name = "Friends", AppUser = demoUser },

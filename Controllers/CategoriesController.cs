@@ -1,5 +1,4 @@
 ﻿using ContactHarbor.Models;
-using ContactHarbor.Services;
 using ContactHarbor.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -154,7 +153,7 @@ public class CategoriesController : Controller
         {
             await _emailService.SendEmailAsync(contact.Email!, model.Subject!, model.Message!);
         }
-        
+
         TempData["SuccessMessage"] = "Email sent successfully.";
         return RedirectToAction(nameof(Index));
     }

@@ -21,7 +21,7 @@ public class ForgotPasswordConfirmation : PageModel
 
     public ForgotPasswordConfirmation(SignInManager<AppUser> signInManager)
     {
-            _signInManager = signInManager;
+        _signInManager = signInManager;
     }
 
 

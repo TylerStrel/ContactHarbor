@@ -153,7 +153,7 @@ public class ContactsController : Controller
     }
 
     [HttpGet]
-    public async Task <IActionResult> Email(Guid id)
+    public async Task<IActionResult> Email(Guid id)
     {
         var contact = await _contactService.GetContactByIdAsync(id);
 
