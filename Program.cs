@@ -23,7 +23,7 @@ builder.Services.AddScoped<IEmailSender, EmailService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 
-builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("ElasticEmail"));
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddMvc();
 

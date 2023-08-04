@@ -19,25 +19,32 @@ public class EmailService : IEmailSender
 
     public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
-        var senderEmail = _mailSettings.SmtpUsername ?? Environment.GetEnvironmentVariable("SmtpUsername");
+        var senderName = _mailSettings.SmtpSenderName ?? Environment.GetEnvironmentVariable("SmtpSenderName");
+        var senderEmail = _mailSettings.SmtpEmail ?? Environment.GetEnvironmentVariable("SmtpEmail");
+        var apiKey = _mailSettings.SmtpApiKey ?? Environment.GetEnvironmentVariable("SmtpApiKey");
         var host = _mailSettings.SmtpServer ?? Environment.GetEnvironmentVariable("SmtpServer");
         var port = _mailSettings.SmtpPort != 0 ? _mailSettings.SmtpPort : int.Parse(Environment.GetEnvironmentVariable("SmtpPort")!);
-        var key = _mailSettings.SmtpApiKey ?? Environment.GetEnvironmentVariable("SmtpApiKey");
+        var secret = _mailSettings.SmtpSecret ?? Environment.GetEnvironmentVariable("SmtpSecret");
 
 
-        var emailAddress = senderEmail;
-        var message = new MimeMessage();
-        message.Headers.Add("trackopens", "false");
-        message.Headers.Add("trackclicks", "false");
-        message.From.Add(MailboxAddress.Parse(emailAddress));
-        message.To.Add(MailboxAddress.Parse(email));
-        message.Subject = subject;
-        message.Body = new TextPart("html") { Text = htmlMessage };
+        try
+        {
+            var message = new MimeMessage();
+            message.From.Add(MailboxAddress.Parse($"{senderName} <{senderEmail}>"));
+            message.To.Add(MailboxAddress.Parse(email));
+            message.Subject = subject;
+            message.Body = new TextPart("html") { Text = htmlMessage };
 
-        using var client = new SmtpClient();
-        await client.ConnectAsync(host, port, SecureSocketOptions.StartTls);
-        await client.AuthenticateAsync(emailAddress, key);
-        await client.SendAsync(message);
-        await client.DisconnectAsync(true);
+            using var client = new SmtpClient();
+            await client.ConnectAsync(host, port, SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(apiKey, secret);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+
+        }
+        catch
+        {
+            throw;
+        }
     }
 }

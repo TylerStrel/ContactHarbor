@@ -2,9 +2,12 @@
 
 public class MailSettings
 {
-    public string? SmtpUsername { get; set; }
+    public string? SmtpSenderName { get; set; }
 
+    public string? SmtpEmail { get; set; }
     public string? SmtpApiKey { get; set; }
+
+    public string? SmtpSecret { get; set; }
 
     public string? SmtpServer { get; set; }
 
