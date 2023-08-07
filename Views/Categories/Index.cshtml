@@ -31,9 +31,9 @@
                                 <h5>@Html.DisplayFor(modelItem => item.Name)</h5>
                             </td>
                             <td>
-                                <a asp-action="Email" asp-route-id="@item.Id" title="Email Contacts in Category"><i data-icon="ei-envelope" data-size="m" class="contact-action-icon"></i></a>
-                                <a asp-action="Edit" asp-route-id="@item.Id" title="Edit Category"><i data-icon="ei-pencil" data-size="m" class="contact-action-icon"></i></a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" title="Delete Category"><i data-icon="ei-trash" data-size="m" class="contact-action-icon-delete"></i></a>
+                                <a asp-action="Email" asp-route-id="@item.Id" title="Email Category"><i class="bi bi-envelope contact-action-icon"></i></a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" title="Edit Category"><i class="bi bi-pencil contact-action-icon"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" title="Delete Category"><i class="bi bi-trash contact-action-icon-delete"></i></a>
                             </td>
                         </tr>
                     }

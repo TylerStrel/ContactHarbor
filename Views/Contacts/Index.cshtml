@@ -48,32 +48,26 @@
                 e.preventDefault();
                 var searchString = $("#search-input").val();
 
-                // If searchString is not empty, then send the request.
                 if (searchString.trim() !== "") {
                     e.preventDefault();
                     $("#contactTable").load("/Contacts/Search?searchString=" + searchString);
                 }
-                // If searchString is empty, do nothing (or show a message/alert if you want).
                 else {
                     e.preventDefault();
                 }
             });
 
-            // Add event listener for category filter
             $("#category-filter").change(function () {
                 var categoryId = $(this).val();
 
-                // If categoryId is not empty, then send the request.
                 if (categoryId !== "") {
                     $("#contactTable").load("/Contacts/FilterByCategory?categoryId=" + categoryId);
                 }
-                // If categoryId is empty, reload the contact list (or filter by another parameter if needed).
                 else {
                     location.reload();
                 }
             });
 
-            // Clear Search button behavior
             $("#clear-button").click(function (e) {
                 e.preventDefault();
                 location.reload();
