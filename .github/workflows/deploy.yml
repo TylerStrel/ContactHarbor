@@ -29,5 +29,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /srv/personal-portfolio/$repo_name
+            cd /srv/personal-portfolio/${{ steps.extract-repo-name.outputs.repo_name }}
             ./deploy.sh
