@@ -12,12 +12,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Extract repository name
       - name: Extract Repository Name
         id: extract-repo-name
         run: |
           repo_name=$(echo "${GITHUB_REPOSITORY}" | cut -d '/' -f 2)
-          echo "Repository Name: $repo_name" >> $GITHUB_ENV
+          echo "REPO_NAME=$repo_name" >> $GITHUB_ENV
 
       # Deploy to server
       - name: Deploy to server
