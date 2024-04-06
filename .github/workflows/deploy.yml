@@ -17,8 +17,7 @@ jobs:
         id: extract-repo-name
         run: |
           repo_name=$(echo "${GITHUB_REPOSITORY}" | cut -d '/' -f 2)
-          echo "Repository Name: $repo_name"
-          echo "::set-output name=repo_name::$repo_name"
+          echo "Repository Name: $repo_name" >> $GITHUB_ENV
 
       # Deploy to server
       - name: Deploy to server
@@ -29,5 +28,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /srv/personal-portfolio/${{ steps.extract-repo-name.outputs.repo_name }}
+            cd /srv/personal-portfolio/${{ env.repo_name }}
             ./deploy.sh
