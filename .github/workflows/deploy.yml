@@ -15,7 +15,7 @@ jobs:
       - name: Extract repository name
         run: |
           repo_name=$(echo "${GITHUB_REPOSITORY}" | cut -d '/' -f 2)
-          echo "Repository Name: $repo_name
+          echo "Repository Name: $repo_name"
           
       - name: Deploy to server
         uses: appleboy/ssh-action@master
