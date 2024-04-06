@@ -11,13 +11,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
-      - name: Extract repository name
+
+      # Extract repository name
+      - name: Extract Repository Name
+        id: extract-repo-name
         run: |
           repo_name=$(echo "${GITHUB_REPOSITORY}" | cut -d '/' -f 2)
           echo "Repository Name: $repo_name"
-          
+          echo "::set-output name=repo_name::$repo_name"
+
+      # Deploy to server
       - name: Deploy to server
+        if: ${{ success() }}
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
