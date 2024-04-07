@@ -12,7 +12,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Set repo name
       - name: Set repo name
         id: set_repo_name
         run: echo "REPO_NAME=$(echo ${GITHUB_REPOSITORY} | cut -d'/' -f 2)" >> $GITHUB_ENV
