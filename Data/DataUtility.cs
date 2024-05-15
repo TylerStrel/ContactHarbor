@@ -51,20 +51,18 @@ public static class DataUtility
 
     private static async Task SeedDemoUserAsync(UserManager<AppUser> userManager, IConfiguration configuration)
     {
-        AppUser demoUser = new AppUser()
-        {
-            UserName = "demo@contactharbor.com",
-            Email = "demo@contactharbor.com",
-            FirstName = "Demo",
-            LastName = "User",
-            EmailConfirmed = true
-        };
-
         try
         {
-            AppUser? user = await userManager.FindByEmailAsync(demoUser.Email);
+			AppUser demoUser = new AppUser()
+			{
+				UserName = "demo@contactharbor.com",
+				Email = "demo@contactharbor.com",
+				FirstName = "Demo",
+				LastName = "User",
+				EmailConfirmed = true
+			};
 
-            if (user is null) await userManager.CreateAsync(demoUser, configuration["DemoUserPassword"] ?? Environment.GetEnvironmentVariable("DEMO_USER_PASSWORD")!);
+			await userManager.CreateAsync(demoUser, configuration["DemoUserPassword"] ?? Environment.GetEnvironmentVariable("DEMO_USER_PASSWORD")!);
         }
         catch(Exception ex)
         {
