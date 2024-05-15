@@ -67,7 +67,6 @@ public static class DataUtility
         catch(Exception ex)
         {
 			Console.WriteLine($"Unable to seed the demo user account. {ex.Message}");
-			throw;
         }
     }
 
