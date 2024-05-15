@@ -39,10 +39,15 @@ public static class DataUtility
         var webHostEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
 
         await dbContextService.Database.MigrateAsync();
+		
+		Console.WriteLine("Starting to seed demo user...");
+		await SeedDemoUserAsync(userManagerService, configuration);
+		Console.WriteLine("Demo user seeding completed.");
 
-        await SeedDemoUserAsync(userManagerService, configuration);
-        await SeedDemoUserDataAsync(dbContextService, userManagerService, webHostEnvironment);
-    }
+		Console.WriteLine("Starting to seed demo user data...");
+		await SeedDemoUserDataAsync(dbContextService, userManagerService, webHostEnvironment);
+		Console.WriteLine("Demo user data seeding completed.");
+	}
 
     private static async Task SeedDemoUserAsync(UserManager<AppUser> userManager, IConfiguration configuration)
     {
