@@ -73,7 +73,8 @@ public static class DataUtility
 				password = configuration["DemoUserPassword"];
 			}
 
-			await userManager.CreateAsync(demoUser, password!);
+			var affectedRows = await userManager.CreateAsync(demoUser, password!);
+			Console.WriteLine($"Demo User Rows affected : {affectedRows}");
         }
         catch(Exception ex)
         {
