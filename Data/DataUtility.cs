@@ -59,7 +59,7 @@ public static class DataUtility
         {
             AppUser? user = await userManager.FindByEmailAsync(demoUser.Email);
 
-            if (user is null) await userManager.CreateAsync(demoUser, configuration["DemoUserPassword"]!);
+            if (user is null) await userManager.CreateAsync(demoUser, configuration["DemoUserPassword"] ?? Environment.GetEnvironmentVariable("DEMO_USER_PASSWORD")!);
         }
         catch
         {

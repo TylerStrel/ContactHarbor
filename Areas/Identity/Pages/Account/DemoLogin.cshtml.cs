@@ -23,7 +23,7 @@ public class DemoLogin : PageModel
             return LocalRedirect("~/Index");
         }
 
-        var result = await _signInManager.PasswordSignInAsync("demo@contactharbor.com", _configuration["DemoUserPassword"]!, isPersistent: false, lockoutOnFailure: false);
+        var result = await _signInManager.PasswordSignInAsync("demo@contactharbor.com", _configuration["DemoUserPassword"] ?? Environment.GetEnvironmentVariable("DEMO_USER_PASSWORD")!, isPersistent: false, lockoutOnFailure: false);
 
         if (result.Succeeded)
         {

@@ -20,12 +20,6 @@ public class HomeController : Controller
         return View();
     }
 
-    public async Task<IActionResult> Email()
-    {
-        await _emailService.SendEmailAsync("Tyler.Strel@Gmail.com", "Test Subject", "<h1>This is a test email</h1>");
-        return View();
-    }
-
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
