@@ -62,7 +62,18 @@ public static class DataUtility
 				EmailConfirmed = true
 			};
 
-			await userManager.CreateAsync(demoUser, configuration["DemoUserPassword"] ?? Environment.GetEnvironmentVariable("DEMO_USER_PASSWORD")!);
+			var password = "";
+
+			if (string.IsNullOrWhiteSpace(configuration["DemoUserPassword"]))
+			{
+				password = Environment.GetEnvironmentVariable("DEMO_USER_PASSWORD")!;
+			}
+			else
+			{
+				password = configuration["DemoUserPassword"];
+			}
+
+			await userManager.CreateAsync(demoUser, password!);
         }
         catch(Exception ex)
         {
