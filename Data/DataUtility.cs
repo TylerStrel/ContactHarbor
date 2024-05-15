@@ -66,9 +66,10 @@ public static class DataUtility
 
             if (user is null) await userManager.CreateAsync(demoUser, configuration["DemoUserPassword"] ?? Environment.GetEnvironmentVariable("DEMO_USER_PASSWORD")!);
         }
-        catch
+        catch(Exception ex)
         {
-            throw;
+			Console.WriteLine($"Unable to seed the demo user account. {ex.Message}");
+			throw;
         }
     }
 
