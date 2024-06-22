@@ -66,7 +66,7 @@ public static class DataUtility
 
 			if (string.IsNullOrWhiteSpace(configuration["DemoUserPassword"]))
 			{
-				password = Environment.GetEnvironmentVariable("DEMO_USER_PASSWORD")!;
+				password = Environment.GetEnvironmentVariable("DEMO_USER_PASSWORD") ?? configuration["DemoUserPassword"];
 			}
 			else
 			{
